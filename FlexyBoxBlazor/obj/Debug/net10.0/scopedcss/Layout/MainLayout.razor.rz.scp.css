@@ -1,0 +1,18 @@
+.app-outer[b-g1q7ntg1ia] {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.phone-frame[b-g1q7ntg1ia] {
+    /* width: 448px; */
+    /* height: 900px; */
+
+    box-sizing: border-box;
+    overflow: hidden;
+
+    border: 1px solid #ddd;
+    border-radius: 24px;
+}

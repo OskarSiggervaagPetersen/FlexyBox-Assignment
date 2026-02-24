@@ -1,0 +1,177 @@
+@page "/"
+
+<div class="client-details">
+
+    <!-- ============== TITLE / FAVORITE ============== -->
+    <section class="section">
+        <h1 class="title">Aalborg</h1>
+    </section>
+
+    <!-- ============== STATUS / ADDRESS ============== -->
+    <section class="section">
+        <div class="info-row">
+            <span class="status @(_isOpen ? "open" : "closed")">
+                @(_isOpen ? "• Open" : "• Closed")
+            </span>
+            <span class="status-separator">•</span>
+            <span class="address">Østerågade 27, 9000</span>
+            <span class="status-separator">•</span>
+            <span class="address">Aalborg</span>
+        </div>
+    </section>
+
+    <!-- ============== CONTACT BADGES ============== -->
+    <section class="section">
+        <div class="badge-row">
+            @foreach (ContactBadgeItem item in _contactBadges)
+            {
+                <a href="@item.Href" class="badge">
+                    <i class="@item.Icon" target="@(item.OpenInNewTab ? "_blank" : null)" rel="@(item.OpenInNewTab ? "noopener noreferrer" : null)"></i>
+                    @if (item.Info is not null)
+                    {
+                        @item.Info
+                    }
+                </a>
+
+            }
+        </div>
+    </section>
+
+    <!-- ============== IMAGE SCROLL ============== -->
+    <section class="section">
+        <div class="image-scroll">
+            @foreach (ImageItem img in _images)
+            {
+                <div class="image-card" @onclick="() => OpenImage(img.Src)">
+                    <img src="@img.Src" alt="@img.Alt" />
+                </div>
+            }
+        </div>
+    </section>
+
+    @if (_selectedImage != null)
+    {
+        <div class="image-overlay" @onclick="CloseImage">
+            <img src="@_selectedImage" class="overlay-image" alt="Selected image" @onclick:stopPropagation="true" />
+        </div>
+    }
+
+    <!-- ============== INFO TABS ============== -->
+    <section class="section section-separators">
+        <h2 class="tabs-title">Opening hours</h2>
+        <div class="tabs">
+
+            <div class="tab-header" role="tablist" aria-label="Service tabs">
+                @foreach (TabItem tab in _tabs)
+                {
+                    <button type="button" class="tab-badge @(tab == _activeTab ? "active" : null)" role="tab" aria-selected="@(tab == _activeTab)" @onclick="() => SetActiveTab(tab)">
+                        @tab.Title
+                    </button>
+                }
+            </div>
+
+            <div class="tab-content" role="tabpanel">
+                @foreach (InfoRow row in _activeTab.Rows)
+                {
+                    <div class="info-row2">
+                        <div class="left">@row.Left</div>
+                        <div class="right">@row.Right</div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </section>
+
+</div>
+
+@code {
+    // ============== STATUS / ADDRESS ==============
+    private bool _isOpen = true;
+
+    // ============== CONTACT BADGES ==============
+    private sealed record ContactBadgeItem(string Icon, string Href, string? Info, bool OpenInNewTab);
+
+    private readonly List<ContactBadgeItem> _contactBadges = new List<ContactBadgeItem>()
+    {
+        new ContactBadgeItem(Icon: "fa-solid fa-phone", Href: "tel:+4511223344", Info: "+45 11 22 33 44", OpenInNewTab: false),
+        new ContactBadgeItem(Icon: "fa-solid fa-at", Href: "mailto:aalborg@flexybox.com", Info: "aalborg@flexybox.com", OpenInNewTab: false),
+        new ContactBadgeItem(Icon: "fa-solid fa-headset", Href: "https://flexybox.com/support/", Info: null, OpenInNewTab: true),
+    };
+
+    // ============== IMAGE SCROLL ==============
+    private sealed record ImageItem(string Src, string Alt);
+
+    private readonly List<ImageItem> _images = new()
+    {
+        new("images/restaurant_facade.jpg", "Restaurant exterior"),
+        new("images/restaurant_interior.jpg", "Restaurant interior seating"),
+        new("images/restaurant_brunch_menu.jpg", "Brunch menu items"),
+        new("images/restaurant_customer_service.avif", "Staff serving customers"),
+    };
+
+    private string? _selectedImage;
+
+    private void OpenImage(string url)
+    {
+        _selectedImage = url;
+    }
+
+    private void CloseImage()
+    {
+        _selectedImage = null;
+    }
+
+    // ============== INFO TABS ==============
+    private sealed record InfoRow(string Left, string Right);
+    private sealed record TabItem(string Title, List<InfoRow> Rows);
+
+    private readonly List<TabItem> _tabs = new()
+    {
+        new TabItem("Restaurant", new List<InfoRow>
+        {
+            new("Monday - Thursday", "07:00 - 22:00"),
+            new("Friday", Right: "07:00 - 22:00"),
+            new("Saturday", "07:00 - 22:00"),
+            new("Sunday", "07:00 - 22:00"),
+            new("Holiday", "Closed"),
+        }),
+
+        new TabItem("Takeaway", new List<InfoRow>
+        {
+            new("Monday - Thursday", "15:00 - 21:00"),
+            new("Friday", Right: "15:00 - 21:00"),
+            new("Saturday", "15:00 - 21:00"),
+            new("Sunday", "15:00 - 21:00"),
+            new("Holiday", "Closed"),
+        }),
+
+        new TabItem("Buffet", new List<InfoRow>
+        {
+            new("Days", "Saturday"),
+            new("Time", "11:00-15:00"),
+            new("Price", "149 kr"),
+            new("Kids", "Half price"),
+        }),
+
+        new TabItem("Special Events for Groups", new List<InfoRow>
+        {
+            new("Easter brunch", "April"),
+            new("Summer tasting menu", "June"),
+            new("Oktoberfest night", "October"),
+            new("Christmas buffet", "December"),
+        }),
+    };
+
+    private TabItem _activeTab;
+
+    protected override void OnInitialized()
+    {
+        _activeTab = _tabs[0];
+    }
+
+    private void SetActiveTab(TabItem tab)
+    {
+        _activeTab = tab;
+    }
+}
