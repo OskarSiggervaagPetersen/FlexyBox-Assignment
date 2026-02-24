@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FlexyBoxBlazor")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2594dbc40448641117e57e6a4a1294336e5de07c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dd51a4bca76348213d98d528e6dc4cc7a5aa5620")]
 [assembly: System.Reflection.AssemblyProductAttribute("FlexyBoxBlazor")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FlexyBoxBlazor")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
