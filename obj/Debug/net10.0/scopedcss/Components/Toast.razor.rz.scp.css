@@ -1,0 +1,27 @@
+.toast[b-r7yan2bt5w] {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    padding: 12px 18px;
+    border-radius: 999px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    color: white;
+    z-index: 2000;
+}
+
+.toast-success[b-r7yan2bt5w] {
+    background-color: rgba(40, 167, 69, 0.95);
+}
+
+.toast-error[b-r7yan2bt5w] {
+    background-color: rgba(220, 53, 69, 0.95);
+}
+
+.toast-neutral[b-r7yan2bt5w] {
+    background-color: rgba(0, 0, 0, 0.85);
+}

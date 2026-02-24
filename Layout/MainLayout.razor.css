@@ -7,8 +7,7 @@
 }
 
 .phone-frame {
-    /* width: 448px; */
-    /* height: 900px; */
+    height: 900px;
 
     box-sizing: border-box;
     overflow: hidden;

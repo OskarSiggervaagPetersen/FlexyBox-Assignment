@@ -1,11 +1,17 @@
 @page "/"
+@using FlexyBoxBlazor.Components
 
 <div class="client-details">
 
     <!-- ============== TITLE / FAVORITE ============== -->
-    <section class="section">
-        <h1 class="title">Aalborg</h1>
+    <section class="section header-row">
+        <h1 class="title">@(_title)</h1>
+        <button type="button" class="favorite-button @(_isFavorite ? "is-favorite" : null)" aria-label="@(_isFavorite ? "Remove from favorites" : "Add to favorites")" @onclick="ToggleFavorite">
+            <i class="@(_isFavorite ? "fa-solid fa-heart" : "fa-regular fa-heart")"></i>
+        </button>
     </section>
+
+    <Toast Message="@(_toastMessage)" Variant="(_isFavorite ? Toast.ToastVariant.Success : Toast.ToastVariant.Error)" />
 
     <!-- ============== STATUS / ADDRESS ============== -->
     <section class="section">
@@ -14,19 +20,19 @@
                 @(_isOpen ? "• Open" : "• Closed")
             </span>
             <span class="status-separator">•</span>
-            <span class="address">Østerågade 27, 9000</span>
+            <span class="address">@(_address)</span>
             <span class="status-separator">•</span>
-            <span class="address">Aalborg</span>
+            <span class="address">@(_city)</span>
         </div>
     </section>
 
     <!-- ============== CONTACT BADGES ============== -->
-    <section class="section">
+    <section class="padding-section">
         <div class="badge-row">
             @foreach (ContactBadgeItem item in _contactBadges)
             {
-                <a href="@item.Href" class="badge">
-                    <i class="@item.Icon" target="@(item.OpenInNewTab ? "_blank" : null)" rel="@(item.OpenInNewTab ? "noopener noreferrer" : null)"></i>
+                <a href="@item.Href" class="badge" target="@(item.OpenInNewTab ? "_blank" : null)" rel="@(item.OpenInNewTab ? "noopener noreferrer" : null)">
+                    <i class="@item.Icon"></i>
                     @if (item.Info is not null)
                     {
                         @item.Info
@@ -38,7 +44,7 @@
     </section>
 
     <!-- ============== IMAGE SCROLL ============== -->
-    <section class="section">
+    <section class="padding-section">
         <div class="image-scroll">
             @foreach (ImageItem img in _images)
             {
@@ -57,7 +63,7 @@
     }
 
     <!-- ============== INFO TABS ============== -->
-    <section class="section section-separators">
+    <section class="padding-section section-separators">
         <h2 class="tabs-title">Opening hours</h2>
         <div class="tabs">
 
@@ -86,8 +92,29 @@
 </div>
 
 @code {
+
+    // ============== TITLE ==============
+    private string _title = "Aalborg";
+
+    // ============== FAVORITE ==============
+    private bool _isFavorite;
+    private string? _toastMessage;
+    private Toast.ToastVariant _toastVariant;
+
+    private void ToggleFavorite()
+    {
+        _isFavorite = !_isFavorite;
+
+        _toastVariant = _isFavorite ? Toast.ToastVariant.Success : Toast.ToastVariant.Error;
+        _toastMessage = _isFavorite
+            ? $"\"{_title}\" has been added as a favorite"
+            : $"\"{_title}\" has been removed as a favorite";
+    }
+
     // ============== STATUS / ADDRESS ==============
     private bool _isOpen = true;
+    private string _address = "Østerågade 27, 9000";
+    private string _city = "Aalborg";
 
     // ============== CONTACT BADGES ==============
     private sealed record ContactBadgeItem(string Icon, string Href, string? Info, bool OpenInNewTab);
@@ -163,7 +190,7 @@
         }),
     };
 
-    private TabItem _activeTab;
+    private TabItem _activeTab = null!;
 
     protected override void OnInitialized()
     {

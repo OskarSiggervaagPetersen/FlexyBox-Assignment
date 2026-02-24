@@ -1,0 +1,44 @@
+@if (_visible && !string.IsNullOrWhiteSpace(Message))
+{
+    <div class="toast @ToastClass">
+        @Message
+    </div>
+}
+
+@code {
+    [Parameter] public string? Message { get; set; }
+    [Parameter] public ToastVariant Variant { get; set; } = ToastVariant.Neutral;
+    [Parameter] public int DurationMs { get; set; } = 2500;
+
+    private bool _visible;
+    private CancellationTokenSource? _cts;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Console.WriteLine("hej");
+        // Show whenever Message changes to a non-empty value
+        if (string.IsNullOrWhiteSpace(Message))
+            return;
+
+        _cts?.Cancel();
+        _cts = new CancellationTokenSource();
+
+        _visible = true;
+
+        try
+        {
+            await Task.Delay(DurationMs, _cts.Token);
+            _visible = false;
+        }
+        catch (TaskCanceledException) { }
+    }
+
+    private string ToastClass => Variant switch
+    {
+        ToastVariant.Success => "toast-success",
+        ToastVariant.Error => "toast-error",
+        _ => "toast-neutral"
+    };
+
+    public enum ToastVariant { Neutral, Success, Error }
+}
